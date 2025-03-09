@@ -1,0 +1,56 @@
+.page-base-style {
+    margin: 0;
+    padding: 0;
+    background: #000532;
+    font-family: sans-serif;
+    color: aliceblue;
+}
+
+.main-column {
+    width: 70%;
+    margin: auto;
+}
+
+.stylebox {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 6px;
+    border: 5px;
+    border-radius: 5px;
+    background-color: #0D1117;
+    position: relative;
+    display: flex;
+}
+
+.header {
+    text-align: center;
+    flex: content;
+}
+
+.home-page {
+    position: absolute;
+}
+
+.content {
+    flex-basis: 80%;
+    padding: 6px;
+}
+
+.nav-wrapper {
+    float: right;
+    font-size: 16px;
+    flex-basis: 20%;
+}
+
+.page-container {
+    margin-top: auto;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 6px;
+    border: 5px;
+    border-style: inset;
+    border-radius: 3px;
+}

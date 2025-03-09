@@ -2,8 +2,8 @@
 
 #### Blogs
 
-- something here
+- To be written
 
 #### Tutorials
 
-- something else there
+- To be written
