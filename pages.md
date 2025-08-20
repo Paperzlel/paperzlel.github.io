@@ -2,7 +2,7 @@
 
 #### Blogs
 
-- [The Maths Behind Video Games](pages/3d-to-screen-maths.html)
+- To be written
 
 #### Tutorials
 
