@@ -6,4 +6,4 @@
 
 #### Tutorials
 
-- To be written
+- [Setting up Virtual 8086](pages/virtual_8086_tutorial.html)
