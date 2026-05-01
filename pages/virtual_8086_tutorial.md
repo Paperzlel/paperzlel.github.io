@@ -15,6 +15,7 @@ In order to use V86, there are several items one will need to have set up prior.
 For use with **paging enabled**, you'll need a couple of hidden options as well:
 1. A handler for IRQ 7 and 15 (the spurious IRQs).
 2. A paging mechanism that can enable pages to act as userspace memory for a period of time.
+
 See the Addenda at the bottom of the page for some more detailed notes on using Virtual 8086 with paging enabled.
 
 Some form of debugging tools, such as `bochs` or `QEMU` is also highly recommended.
