@@ -13,8 +13,8 @@ In order to use V86, there are several items one will need to have set up prior.
 3. A Task State Segment, with `ss0`, `es`, `cs`, `ds`, `fs`, `gs`, `esp0` and `iobp` set. All of the segment registers bar `cs` should be set to your 32-bit data segment, and `cs` should be your 32-bit code segment. `esp0` should be at the top of your stack when it is initialized, but this may not matter. Assuming you also have `SPP` in your TSS, the size of the TSS for `iobp` is sizeof(TSS) - 4.
 
 For use with **paging enabled**, you'll need a couple of hidden options as well:
-4. A handler for IRQ 7 and 15 (the spurious IRQs).
-5. A paging mechanism that can enable pages to act as userspace memory for a period of time.
+1. A handler for IRQ 7 and 15 (the spurious IRQs).
+2. A paging mechanism that can enable pages to act as userspace memory for a period of time.
 See the Addenda at the bottom of the page for some more detailed notes on using Virtual 8086 with paging enabled.
 
 Some form of debugging tools, such as `bochs` or `QEMU` is also highly recommended.
