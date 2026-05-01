@@ -12,6 +12,11 @@ In order to use V86, there are several items one will need to have set up prior.
 2. A filled-out Interrupt Descriptor Table with the ability to add a handler to an Interrupt Service Routine. A good way of doing this is to have one global ISR that calls another ISR for that specific interrupt.
 3. A Task State Segment, with `ss0`, `es`, `cs`, `ds`, `fs`, `gs`, `esp0` and `iobp` set. All of the segment registers bar `cs` should be set to your 32-bit data segment, and `cs` should be your 32-bit code segment. `esp0` should be at the top of your stack when it is initialized, but this may not matter. Assuming you also have `SPP` in your TSS, the size of the TSS for `iobp` is sizeof(TSS) - 4.
 
+For use with **paging enabled**, you'll need a couple of hidden options as well:
+4. A handler for IRQ 7 and 15 (the spurious IRQs).
+5. A paging mechanism that can enable pages to act as userspace memory for a period of time.
+See the Addenda at the bottom of the page for some more detailed notes on using Virtual 8086 with paging enabled.
+
 Some form of debugging tools, such as `bochs` or `QEMU` is also highly recommended.
 
 ## How to Load your Program
@@ -219,6 +224,20 @@ Well, that's it! Hopefully by now you have some kind of V86 Monitor and way to e
 Finally, some things to bear in mind when creating V86 tasks themselves, rather than this entire system.
 - Only use V86 tasks when there is no way to access a BIOS function or use certain behaviour exclusive to Real Mode. For instance, using V86 for floppy disk systems is impractical, as alternative methods that do not require BIOS interrupts exist for reading/writing to them. Personally, I use V86 for enabling VESA VBE graphics modes within my kernel, as despite having a bootloader I still want to have access to text modes before I enable the graphics driver.
 - V86 is not a suitable method for running plain old Assembly. You can do all of that anyway, use the ASM/C interop that already exists.
+
+## Addenda
+
+### Virtual 8086 when using paging
+When you enable paging, this module (no matter how perfect) will appear to be non-functional, and there's a pretty good reason for that.
+See, the reason we need to build in the exception handling is because V86 tasks run on the privilege level 3, the same as userspace code. As a consequence, *all* of the privileged instructions need to be emulated as they shouldn't be running as this PL (privilege level).
+This has ramifications when we use paging, as now the system sees that our instructions are running in an area they shouldn't (kernel space) and it throws a page fault as we're accessing data we shouldn't have access to. So how do we overcome this?
+
+The easiest solution I found was actually pretty simple.
+Firstly, make a "toggle" for a specific region of memory to become userspace or not on-the-fly. This means that we can arbitrarily set anywhere in memory to be userspace, even if it's not, which at this level is fine but a more beefy kernel with an actual userspace may have to put some further safeguards to prevent this.
+Secondly, use this function to make the first MiB of RAM (from `0x0` to `0x100000`) userspace JUST before entering the V86 entry handler. Ideally, you would also call to `cli` to disable hardware interrupts in this period, but that may mess up any PITs you have set and won't be the end of the world if you don't. 
+Finally, make sure your spurious IRQ handler exists. I found that this was the main area I would get an unhandled exception in, and the reason is that any IRQs generated during the V86 program can be notified by the PIC to the CPU but disappear before they can be sent as the CPU is currently handling an exception, so the spurious one is sent instead.
+
+Once you've created these and hooked them up, well done! You should now have paging and Virtual 8086 modes available for use. Do make sure the userspace first MiB is disabled once you're done though, as writing to that includes the BIOS and I don't think you'd want users doing that.
 
 ## Resources
 1. [OSDev Wiki on Virtual 8086 Mode](https://wiki.osdev.org/Virtual_8086_Mode)
